@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Farny ❤️ ZERO — Final Quest</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:Poppins,sans-serif}
+body{background:black;color:white;overflow:hidden}
+
+/* BACKGROUND */
+#bg{
+position:fixed;inset:0;
+background:radial-gradient(circle at top,#1a0033,#000);
+overflow:hidden;
+z-index:-1;
+}
+
+/* SCENES */
+.scene{
+position:absolute;inset:0;
+display:flex;
+justify-content:center;
+align-items:center;
+text-align:center;
+opacity:0;
+transition:1s;
+padding:20px;
+}
+.scene.active{opacity:1}
+
+/* CARD */
+.card{
+background:rgba(255,255,255,0.06);
+backdrop-filter:blur(15px);
+padding:25px;
+border-radius:20px;
+border:1px solid rgba(255,255,255,0.1);
+max-width:600px;
+}
+
+/* TEXT */
+h1{color:#ff4d8d;margin-bottom:10px}
+p{white-space:pre-line;line-height:1.6}
+
+/* BUTTON */
+button{
+margin-top:10px;
+padding:12px 20px;
+border:none;
+border-radius:30px;
+background:#ff4d8d;
+color:white;
+cursor:pointer;
+}
+
+/* HEARTS */
+.heart{
+position:fixed;
+color:#ff4d8d;
+animation:float 6s linear forwards;
+}
+@keyframes float{
+0%{transform:translateY(0);opacity:1}
+100%{transform:translateY(-100vh);opacity:0}
+}
+
+/* STAR */
+.star{
+position:absolute;
+width:2px;height:2px;
+background:white;
+animation:move 8s linear infinite;
+}
+@keyframes move{
+from{transform:translateY(0)}
+to{transform:translateY(100vh)}
+}
+
+/* CHEST */
+.chest{
+font-size:60px;
+cursor:pointer;
+animation:pulse 1.5s infinite;
+}
+@keyframes pulse{50%{transform:scale(1.1)}}
+
+/* MUSIC BUTTON */
+.musicBtn{
+position:fixed;top:10px;right:10px;
+padding:10px 15px;
+border-radius:20px;
+border:none;
+background:#ff4d8d;
+color:white;
+cursor:pointer;
+}
+
+/* XP BAR */
+#xpBar{
+position:fixed;
+bottom:20px;
+left:20px;
+width:200px;
+height:10px;
+background:rgba(255,255,255,0.2);
+border-radius:10px;
+overflow:hidden;
+z-index:999;
+}
+#xpFill{
+height:100%;
+width:0%;
+background:linear-gradient(90deg,#ff4d8d,#ff9bd3);
+transition:0.5s;
+}
+
+/* SHAKE */
+@keyframes shake{
+0%{transform:translate(0)}
+25%{transform:translate(5px,-5px)}
+50%{transform:translate(-5px,5px)}
+75%{transform:translate(5px,5px)}
+100%{transform:translate(0)}
+}
+</style>
+</head>
+
+<body>
+
+<div id="bg"></div>
+
+<!-- XP BAR -->
+<div id="xpBar"><div id="xpFill"></div></div>
+
+<!-- INTRO -->
+<div class="scene active" id="intro">
+<div class="card">
+<h1>BOOT SEQUENCE</h1>
+<p>Loading emotional engine...
+Scanning memory...
+FARNY.EXE detected ❤️</p>
+<button onclick="next()">START JOURNEY</button>
+</div>
+</div>
+
+<!-- QUESTS -->
+<div class="scene" id="q1">
+<div class="card">
+<h1>Quest I</h1>
+<p>The world was normal…
+until Farny changed everything.</p>
+<button onclick="next()">Continue</button>
+</div>
+</div>
+
+<div class="scene" id="q2">
+<div class="card">
+<h1>Quest II</h1>
+<p>Not loud.
+Not planned.
+Just destiny unfolding softly.</p>
+<button onclick="next()">Continue</button>
+</div>
+</div>
+
+<div class="scene" id="q3">
+<div class="card">
+<h1>Quest III</h1>
+<p>You are not a chapter.
+You are the whole story.</p>
+<button onclick="next()">Continue</button>
+</div>
+</div>
+
+<!-- GIFT -->
+<div class="scene" id="gift">
+<div class="card">
+<h1>FINAL GIFT</h1>
+<div class="chest" onclick="openChest()">🎁</div>
+<p>Tap to unlock legendary reward</p>
+</div>
+</div>
+
+<!-- FINAL -->
+<div class="scene" id="final">
+<div class="card">
+<h1>Happy Birthday Farny ❤️</h1>
+<p id="text"></p>
+<h2 style="margin-top:10px;color:#ff4d8d">— ZERO</h2>
+</div>
+</div>
+
+<audio id="music" loop>
+<source src="assets/music.mp3">
+</audio>
+
+<button class="musicBtn" onclick="document.getElementById('music').play()">🎵 Play</button>
+
+<script>
+
+/* CORE */
+let scenes=["intro","q1","q2","q3","gift","final"];
+let i=0;
+let xp=0;
+
+/* XP SYSTEM */
+function addXP(){
+xp+=25;
+if(xp>100)xp=100;
+document.getElementById("xpFill").style.width=xp+"%";
+}
+
+/* FLASH */
+function flash(){
+let f=document.createElement("div");
+f.style.position="fixed";
+f.style.inset="0";
+f.style.background="white";
+f.style.opacity="0.6";
+f.style.zIndex="9999";
+document.body.appendChild(f);
+setTimeout(()=>f.style.opacity="0",100);
+setTimeout(()=>f.remove(),800);
+}
+
+/* SHAKE */
+function shake(){
+document.body.style.animation="shake 0.3s";
+setTimeout(()=>document.body.style.animation="",300);
+}
+
+/* SCENE CHANGE */
+function next(){
+flash();
+shake();
+
+document.getElementById(scenes[i]).classList.remove("active");
+i++;
+
+addXP();
+
+setTimeout(()=>{
+if(i<scenes.length){
+document.getElementById(scenes[i]).classList.add("active");
+}
+},200);
+}
+
+/* TYPE TEXT */
+function typeText(){
+let msg=`Farny,
+
+You are not just a person.
+You are a feeling that stayed.
+
+Some stories don’t end…
+they become memory.
+
+Happy Birthday ❤️
+
+— ZERO`;
+
+let el=document.getElementById("text");
+let x=0;
+
+let t=setInterval(()=>{
+el.innerHTML+=msg[x];
+x++;
+if(x>=msg.length)clearInterval(t);
+},40);
+}
+
+/* CHEST */
+function openChest(){
+document.getElementById("gift").classList.remove("active");
+document.getElementById("final").classList.add("active");
+typeText();
+heartStorm();
+}
+
+/* HEART STORM */
+function heartStorm(){
+for(let i=0;i<120;i++){
+let h=document.createElement("div");
+h.className="heart";
+h.innerHTML=Math.random()>0.5?"❤️":"✨";
+h.style.left=Math.random()*100+"vw";
+h.style.fontSize=(10+Math.random()*25)+"px";
+document.body.appendChild(h);
+setTimeout(()=>h.remove(),7000);
+}
+}
+
+/* HEART LOOP */
+setInterval(()=>{
+let h=document.createElement("div");
+h.className="heart";
+h.innerHTML="❤️";
+h.style.left=Math.random()*100+"vw";
+document.body.appendChild(h);
+setTimeout(()=>h.remove(),6000);
+},400);
+
+/* STARS */
+for(let i=0;i<80;i++){
+let s=document.createElement("div");
+s.className="star";
+s.style.left=Math.random()*100+"vw";
+s.style.top=Math.random()*100+"vh";
+document.getElementById("bg").appendChild(s);
+}
+
+/* CLICK EFFECT */
+document.addEventListener("click",(e)=>{
+for(let i=0;i<5;i++){
+let p=document.createElement("div");
+p.innerHTML="✨";
+p.style.position="fixed";
+p.style.left=e.clientX+"px";
+p.style.top=e.clientY+"px";
+p.style.animation="float 1s linear forwards";
+document.body.appendChild(p);
+setTimeout(()=>p.remove(),800);
+}
+});
+
+/* AUTO MUSIC */
+document.addEventListener("click",()=>{
+let m=document.getElementById("music");
+if(m.paused) m.play();
+},{once:true});
+
+/* TITLE LOOP */
+setInterval(()=>{
+let titles=["Farny ❤️ ZERO","Final Quest","Love Engine Active"];
+document.title=titles[Math.floor(Math.random()*titles.length)];
+},2500);
+
+</script>
+
+</body>
+</html>
